@@ -138,11 +138,6 @@
                 <div id="memberFieldsContainer"></div>
 
                 <div id="finalSection" style="display:none;">
-                    <div class="form-group">
-                        <label>College Name:</label>
-                        <input type="text" id="collegeName" class="form-input" placeholder="Your College / Institution" required>
-                    </div>
-
                     <div class="payment-section">
                         <label>Registration Payment</label>
                         <div class="qr-placeholder">
@@ -161,7 +156,6 @@
     </div>
 
     <script>
-        // Your NEW Web App URL
         const scriptURL = 'https://script.google.com/macros/s/AKfycby_S-i7h8TPzLX-fFq-TGTy1X7rsXFnBuwpSQxNiUKg6FACxfrDRDt-gxp6B_ODrlIl/exec';
         
         const eventDropdown = document.getElementById('eventDropdown');
@@ -208,9 +202,10 @@
                         <div class="member-block">
                             <h4 style="font-size: 12px; color: #00eaff; margin-bottom: 10px;">MEMBER ${i}</h4>
                             <input type="text" class="m-name form-input" placeholder="Name" required style="margin-bottom:10px;">
+                            <input type="text" class="m-college form-input" placeholder="College Name" required style="margin-bottom:10px;">
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                                 <input type="tel" class="m-phone form-input" placeholder="Phone" required>
-                                <input type="email" class="m-email form-input" placeholder="Email" required>
+                                <input type="email" class="m-email form-input" placeholder="Gmail ID" required>
                             </div>
                         </div>`;
                 }
@@ -227,15 +222,16 @@
             let membersArr = [];
             document.querySelectorAll('.member-block').forEach((b, i) => {
                 const n = b.querySelector('.m-name').value;
+                const c = b.querySelector('.m-college').value;
                 const p = b.querySelector('.m-phone').value;
                 const em = b.querySelector('.m-email').value;
-                membersArr.push(`[M${i+1}: ${n}, ${p}, ${em}]`);
+                // College Name is now bundled inside the member details string
+                membersArr.push(`[M${i+1}: ${n}, ${c}, ${p}, ${em}]`);
             });
 
             const data = {
                 event: eventDropdown.value,
                 teamSize: teamSizeInput.value,
-                college: document.getElementById('collegeName').value,
                 transactionId: document.getElementById('txnId').value,
                 members: membersArr.join(" | ")
             };
@@ -257,7 +253,6 @@
             });
         });
 
-        // Background Animation
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         let w, h, drops;
