@@ -64,20 +64,12 @@
             transition: 0.3s;
         }
 
-        .form-input:focus { border-color: #00eaff; background: rgba(0, 234, 255, 0.05); }
-
         .member-block {
             background: rgba(0, 234, 255, 0.03);
             border-left: 3px solid #00eaff;
             padding: 20px;
             margin-bottom: 20px;
             border-radius: 0 12px 12px 0;
-            animation: slideIn 0.4s ease-out;
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-10px); }
-            to { opacity: 1; transform: translateX(0); }
         }
 
         .payment-section {
@@ -111,21 +103,7 @@
             transition: 0.3s;
         }
 
-        .btn-submit:disabled {
-            background: #444;
-            cursor: not-allowed;
-            opacity: 0.7;
-        }
-
-        .btn-submit:hover:not(:disabled) { 
-            transform: scale(1.02); 
-            box-shadow: 0 0 20px rgba(0, 234, 255, 0.5); 
-        }
-
-        @media (max-width: 600px) {
-            .glass-panel { padding: 20px; }
-            nav { padding: 20px; }
-        }
+        .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
     </style>
 </head>
 <body>
@@ -134,7 +112,7 @@
 
     <nav>
         <a href="index.html" class="logo">SFGC HACKATHON</a>
-        <a href="events.html" style="color: #00eaff; text-decoration: none; font-size: 14px;">← Back to Events</a>
+        <a href="events.html" style="color: #00eaff; text-decoration: none; font-size: 14px;">← Back</a>
     </nav>
 
     <div class="container">
@@ -161,7 +139,7 @@
 
                 <div id="finalSection" style="display:none;">
                     <div class="form-group">
-                        <label>College Name (Common for all):</label>
+                        <label>College Name:</label>
                         <input type="text" id="collegeName" class="form-input" placeholder="Your College / Institution" required>
                     </div>
 
@@ -170,11 +148,9 @@
                         <div class="qr-placeholder">
                             <img src="qr_code.png" alt="Scan to Pay">
                         </div>
-                        <p style="font-size: 12px; opacity: 0.7; margin-bottom: 20px;">Scan QR and pay the registration fee.<br>Submit the Transaction ID below.</p>
-                        
                         <div class="form-group" style="text-align: left;">
                             <label>Transaction ID / UTR:</label>
-                            <input type="text" id="txnId" class="form-input" placeholder="Enter 12-digit Transaction ID" required>
+                            <input type="text" id="txnId" class="form-input" placeholder="Enter 12-digit ID" required>
                         </div>
 
                         <button type="submit" id="submitBtn" class="btn-submit">COMPLETE REGISTRATION</button>
@@ -185,20 +161,18 @@
     </div>
 
     <script>
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbx8Li6bHcaBimjhnNoOczlUnqDYl3vJPGSPcYcP6OgB0DkRmYY7pgOX8U1l9fpwHaV5/exec';
+        // Your NEW Web App URL
+        const scriptURL = 'https://script.google.com/macros/s/AKfycby_S-i7h8TPzLX-fFq-TGTy1X7rsXFnBuwpSQxNiUKg6FACxfrDRDt-gxp6B_ODrlIl/exec';
         
         const eventDropdown = document.getElementById('eventDropdown');
         const teamSizeInput = document.getElementById('teamSizeInput');
         const memberContainer = document.getElementById('memberFieldsContainer');
         const finalSection = document.getElementById('finalSection');
         const limitHint = document.getElementById('limitHint');
-        const form = document.getElementById('registrationForm');
-        const btn = document.getElementById('submitBtn');
+        const submitBtn = document.getElementById('submitBtn');
 
-        let minSize = 1;
-        let maxSize = 1;
+        let minSize = 1, maxSize = 1;
 
-        // 1. AUTO-LOAD EVENT FROM URL
         window.onload = () => {
             const params = new URLSearchParams(window.location.search);
             const eventParam = params.get('event');
@@ -208,7 +182,6 @@
             }
         };
 
-        // 2. HANDLE EVENT CHOICE
         function handleEventChange() {
             const selected = eventDropdown.value;
             document.getElementById('sizeGroup').style.display = 'block';
@@ -218,106 +191,79 @@
 
             if (selected === "24H Hackathon") {
                 minSize = 2; maxSize = 4;
-                limitHint.innerText = "Minimum 2 and Maximum 4 members allowed.";
+                limitHint.innerText = "Min 2, Max 4 members.";
             } else {
                 minSize = 1; maxSize = 1;
-                limitHint.innerText = "Solo entry only. Please enter 1.";
+                limitHint.innerText = "Solo entry only.";
             }
         }
 
-        // 3. GENERATE DYNAMIC FIELDS
         teamSizeInput.addEventListener('input', () => {
             const size = parseInt(teamSizeInput.value);
             memberContainer.innerHTML = '';
-            
             if (size >= minSize && size <= maxSize) {
                 finalSection.style.display = 'block';
                 for (let i = 1; i <= size; i++) {
                     memberContainer.innerHTML += `
                         <div class="member-block">
                             <h4 style="font-size: 12px; color: #00eaff; margin-bottom: 10px;">MEMBER ${i}</h4>
-                            <input type="text" class="m-name form-input" placeholder="Full Name" required style="margin-bottom:10px;">
+                            <input type="text" class="m-name form-input" placeholder="Name" required style="margin-bottom:10px;">
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                                <input type="tel" class="m-phone form-input" placeholder="Phone Number" required>
-                                <input type="email" class="m-email form-input" placeholder="Gmail ID" required>
+                                <input type="tel" class="m-phone form-input" placeholder="Phone" required>
+                                <input type="email" class="m-email form-input" placeholder="Email" required>
                             </div>
-                        </div>
-                    `;
+                        </div>`;
                 }
             } else {
                 finalSection.style.display = 'none';
             }
         });
 
-        // 4. SUBMIT TO GOOGLE SHEETS (EXCEL)
-        form.addEventListener('submit', e => {
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            btn.disabled = true;
-            btn.innerText = "Processing... Please Wait";
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Saving to Excel...";
 
-            // Compile member data into a single readable string for Excel
-            let membersList = [];
-            const memberBlocks = document.querySelectorAll('.member-block');
-            memberBlocks.forEach((block, index) => {
-                const name = block.querySelector('.m-name').value;
-                const phone = block.querySelector('.m-phone').value;
-                const email = block.querySelector('.m-email').value;
-                membersList.push(`Member ${index+1}: ${name} (${phone}, ${email})`);
+            let membersArr = [];
+            document.querySelectorAll('.member-block').forEach((b, i) => {
+                const n = b.querySelector('.m-name').value;
+                const p = b.querySelector('.m-phone').value;
+                const em = b.querySelector('.m-email').value;
+                membersArr.push(`[M${i+1}: ${n}, ${p}, ${em}]`);
             });
 
-            const dataToSubmit = {
+            const data = {
                 event: eventDropdown.value,
                 teamSize: teamSizeInput.value,
                 college: document.getElementById('collegeName').value,
                 transactionId: document.getElementById('txnId').value,
-                members: membersList.join(" | ")
+                members: membersArr.join(" | ")
             };
 
             fetch(scriptURL, {
                 method: 'POST',
-                mode: 'no-cors', // Essential for Google Scripts
+                mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(dataToSubmit)
+                body: JSON.stringify(data)
             })
-            .then(response => {
-                alert("Registration Successful! Your details have been recorded in our database.");
-                form.reset();
+            .then(() => {
+                alert("Success! Data sent to Excel.");
                 window.location.href = "index.html";
             })
-            .catch(error => {
-                console.error('Error!', error.message);
-                alert("Network Error. Please try again or check your internet connection.");
-                btn.disabled = false;
-                btn.innerText = "COMPLETE REGISTRATION";
+            .catch(err => {
+                alert("Error: " + err.message);
+                submitBtn.disabled = false;
+                submitBtn.innerText = "COMPLETE REGISTRATION";
             });
         });
 
-        // MATRIX BACKGROUND
+        // Background Animation
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
-        let width, height, drops;
-
-        function init() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-            drops = Array(Math.floor(width / 20)).fill(1);
-        }
-
-        function draw() {
-            ctx.fillStyle = "rgba(2, 4, 18, 0.1)";
-            ctx.fillRect(0, 0, width, height);
-            ctx.fillStyle = "#00eaff";
-            ctx.font = "15px monospace";
-            for (let i = 0; i < drops.length; i++) {
-                ctx.fillText(Math.floor(Math.random() * 10), i * 20, drops[i] * 20);
-                if (drops[i] * 20 > height && Math.random() > 0.975) drops[i] = 0;
-                drops[i]++;
-            }
-        }
-
-        init();
-        setInterval(draw, 50);
-        window.addEventListener('resize', init);
+        let w, h, drops;
+        function init() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; drops = Array(Math.floor(w / 20)).fill(1); }
+        function draw() { ctx.fillStyle = "rgba(2, 4, 18, 0.1)"; ctx.fillRect(0, 0, w, h); ctx.fillStyle = "#00eaff"; ctx.font = "15px monospace"; drops.forEach((y, i) => { ctx.fillText(Math.floor(Math.random() * 10), i * 20, y * 20); if (y * 20 > h && Math.random() > 0.975) drops[i] = 0; drops[i]++; }); }
+        init(); setInterval(draw, 50); window.onresize = init;
     </script>
 </body>
 </html>
