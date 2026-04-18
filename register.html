@@ -3,83 +3,291 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register for Hackathon</title>
-
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-
+    <title>Registration - SFGC Hackathon 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-            font-family:'Orbitron', sans-serif;
+        /* --- CORE STYLES --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #020412;
+            color: white;
+            font-family: 'Exo 2', sans-serif;
+            overflow-x: hidden;
         }
 
-        body{
-            background:#020412;
-            color:white;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            min-height:100vh;
+        #bg-canvas {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1;
+            opacity: 0.5;
         }
 
-        .container{
-            width:90%;
-            max-width:900px;
-            background:rgba(0,234,255,0.08);
-            border:1px solid #00eaff;
-            border-radius:15px;
-            padding:40px;
-            text-align:center;
-            box-shadow:0 0 25px #00eaff22;
+        nav {
+            position: fixed;
+            top: 0; width: 100%; padding: 20px 50px;
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(2, 4, 18, 0.95);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0, 234, 255, 0.3);
         }
 
-        h1{
-            color:#00eaff;
-            margin-bottom:25px;
+        .logo { color: #00eaff; font-family: 'Orbitron'; font-weight: bold; font-size: 20px; }
+
+        .container {
+            max-width: 800px;
+            margin: 100px auto 50px;
+            padding: 20px;
         }
 
-        iframe{
-            border-radius:10px;
-            border:none;
+        /* --- GLASS MORPHISM FORM BOX --- */
+        .glass-panel {
+            background: rgba(2, 4, 18, 0.8);
+            backdrop-filter: blur(15px);
+            border: 1px solid #00eaff;
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 0 30px rgba(0, 234, 255, 0.15);
         }
 
-        .back{
-            display:inline-block;
-            margin-top:25px;
-            padding:12px 25px;
-            border-radius:8px;
-            background:linear-gradient(90deg,#00eaff,#0077ff);
-            color:white;
-            text-decoration:none;
-            transition:.3s;
+        h2 { font-family: 'Orbitron'; color: #00eaff; text-align: center; margin-bottom: 30px; letter-spacing: 2px; }
+
+        /* --- FORM ELEMENTS --- */
+        .form-group { margin-bottom: 25px; }
+        label { display: block; margin-bottom: 10px; color: #00eaff; font-size: 14px; font-weight: bold; text-transform: uppercase; }
+
+        .form-input, select {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 234, 255, 0.4);
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            outline: none;
+            transition: 0.3s;
         }
 
-        .back:hover{
-            transform:scale(1.05);
-            box-shadow:0 0 15px #00eaffaa;
+        .form-input:focus { border-color: #00eaff; box-shadow: 0 0 15px rgba(0, 234, 255, 0.3); }
+
+        select option { background: #020412; color: white; }
+
+        /* --- DYNAMIC MEMBER SLOTS --- */
+        .member-card {
+            background: rgba(0, 234, 255, 0.05);
+            border-left: 4px solid #00eaff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 0 12px 12px 0;
+            animation: fadeIn 0.5s ease;
         }
 
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .member-title { color: #fff; font-size: 14px; margin-bottom: 15px; opacity: 0.8; }
+
+        .grid-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        /* --- PAYMENT SECTION --- */
+        .payment-box {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(0, 234, 255, 0.2);
+        }
+
+        .qr-container {
+            background: white;
+            padding: 10px;
+            display: inline-block;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .qr-container img { width: 180px; height: 180px; display: block; }
+
+        .btn-submit {
+            width: 100%;
+            padding: 20px;
+            background: #00b4ff;
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-family: 'Orbitron';
+            font-weight: bold;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(0, 180, 255, 0.4);
+            transition: 0.3s;
+            margin-top: 20px;
+        }
+
+        .btn-submit:hover {
+            background: #00eaff;
+            box-shadow: 0 0 30px rgba(0, 234, 255, 0.6);
+            transform: scale(1.02);
+        }
+
+        @media (max-width: 600px) {
+            .grid-inputs { grid-template-columns: 1fr; }
+            .glass-panel { padding: 20px; }
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
+    <canvas id="bg-canvas"></canvas>
 
-    <h1>Register for Hackathon 2024</h1>
+    <nav>
+        <div class="logo">SFGC HACKATHON</div>
+        <div style="font-size: 14px; opacity: 0.7;">Registration Portal</div>
+    </nav>
 
-    <!-- Google Form Embedded -->
-    <iframe 
-        src="https://docs.google.com/forms/d/e/1FAIpQLSeQpcoxlPTiFoZLnTf2sFSIgDKAWDRJ_GbEiTi00UJXDUWWpw/viewform"
-        width="100%" 
-        height="600">
-        Loading…
-    </iframe>
+    <div class="container">
+        <div class="glass-panel">
+            <h2>EVENT REGISTRATION</h2>
+            
+            <form id="regForm">
+                <div class="form-group">
+                    <label>1. Which event are you choosing?</label>
+                    <select id="eventChoice" required onchange="updateEventLimits()">
+                        <option value="" disabled selected>-- Select an Event --</option>
+                        <option value="hackathon">24H Hackathon (Team 2-4)</option>
+                        <option value="quiz">Tech Quiz (Solo 1)</option>
+                    </select>
+                </div>
 
-    <a href="index.html" class="back">⬅ Back to Home</a>
+                <div id="teamSizeContainer" class="form-group" style="display: none;">
+                    <label id="sizeLabel">2. Enter Team Size:</label>
+                    <input type="number" id="teamSizeInput" class="form-input" placeholder="Enter number of members" required min="1" max="4">
+                    <p id="limitHint" style="font-size: 12px; color: #00eaff; margin-top: 5px;"></p>
+                </div>
 
-</div>
+                <div id="dynamicMembers"></div>
 
+                <div id="footerFields" style="display: none;">
+                    
+                    <div class="form-group">
+                        <label>College Name (Common for all):</label>
+                        <input type="text" class="form-input" placeholder="Enter Institution Name" required>
+                    </div>
+
+                    <div class="payment-box">
+                        <label style="margin-bottom: 20px; display: block;">Registration Payment</label>
+                        <div class="qr-container">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=YOUR_PAYMENT_UPI_LINK" alt="Payment QR">
+                        </div>
+                        <p style="font-size: 13px; opacity: 0.8; margin-bottom: 20px;">Scan QR and pay the fee.<br>Upload Transaction ID below.</p>
+                        
+                        <div class="form-group" style="text-align: left;">
+                            <label>Transaction ID / UTR:</label>
+                            <input type="text" class="form-input" placeholder="12-digit Transaction Number" required>
+                        </div>
+
+                        <button type="submit" class="btn-submit">CONFIRM REGISTRATION</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const eventSelect = document.getElementById('eventChoice');
+        const teamSizeInput = document.getElementById('teamSizeInput');
+        const dynamicMembers = document.getElementById('dynamicMembers');
+        const footerFields = document.getElementById('footerFields');
+        const limitHint = document.getElementById('limitHint');
+
+        let minLimit = 1;
+        let maxLimit = 1;
+
+        // Step 1: Handle Event Selection
+        function updateEventLimits() {
+            const event = eventSelect.value;
+            document.getElementById('teamSizeContainer').style.display = 'block';
+            
+            if (event === 'hackathon') {
+                minLimit = 2; maxLimit = 4;
+                limitHint.innerText = "Team size for Hackathon must be between 2 and 4.";
+            } else {
+                minLimit = 1; maxLimit = 1;
+                limitHint.innerText = "Tech Quiz is an individual event (Enter 1).";
+            }
+            
+            teamSizeInput.min = minLimit;
+            teamSizeInput.max = maxLimit;
+            teamSizeInput.value = ''; // Reset on change
+            dynamicMembers.innerHTML = '';
+            footerFields.style.display = 'none';
+        }
+
+        // Step 2: Generate Member Fields Instantly
+        teamSizeInput.addEventListener('input', () => {
+            const val = parseInt(teamSizeInput.value);
+            dynamicMembers.innerHTML = '';
+
+            if (val >= minLimit && val <= maxLimit) {
+                footerFields.style.display = 'block';
+                for (let i = 1; i <= val; i++) {
+                    const memberHtml = `
+                        <div class="member-card">
+                            <div class="member-title">MEMBER ${i} DETAILS</div>
+                            <div class="form-group">
+                                <input type="text" class="form-input" placeholder="Full Name" required style="margin-bottom:10px;">
+                                <div class="grid-inputs">
+                                    <input type="tel" class="form-input" placeholder="Phone Number" required>
+                                    <input type="email" class="form-input" placeholder="Gmail ID" required>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    dynamicMembers.insertAdjacentHTML('beforeend', memberHtml);
+                }
+            } else {
+                footerFields.style.display = 'none';
+            }
+        });
+
+        // --- MATRIX EFFECT ---
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height, columns;
+        const fontSize = 16;
+
+        function initCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            columns = Math.floor(width / fontSize);
+            drops = new Array(columns).fill(1);
+        }
+
+        let drops = [];
+        function drawMatrix() {
+            ctx.fillStyle = "rgba(2, 4, 18, 0.05)";
+            ctx.fillRect(0, 0, width, height);
+            ctx.fillStyle = "#00eaff";
+            ctx.font = fontSize + "px monospace";
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = Math.floor(Math.random() * 10);
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                if (drops[i] * fontSize > height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            }
+        }
+
+        window.addEventListener('resize', initCanvas);
+        initCanvas();
+        setInterval(drawMatrix, 50);
+
+        // Form Submit
+        document.getElementById('regForm').onsubmit = (e) => {
+            e.preventDefault();
+            alert("Registration Submitted Successfully! Our team will verify your transaction ID.");
+        };
+    </script>
 </body>
 </html>
