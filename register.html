@@ -66,8 +66,6 @@
 
         .form-input:focus { border-color: #00eaff; background: rgba(0, 234, 255, 0.05); }
 
-        select option { background: #020412; color: white; }
-
         .member-block {
             background: rgba(0, 234, 255, 0.03);
             border-left: 3px solid #00eaff;
@@ -113,10 +111,20 @@
             transition: 0.3s;
         }
 
-        .btn-submit:hover { transform: scale(1.02); box-shadow: 0 0 20px rgba(0, 234, 255, 0.5); }
+        .btn-submit:disabled {
+            background: #444;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .btn-submit:hover:not(:disabled) { 
+            transform: scale(1.02); 
+            box-shadow: 0 0 20px rgba(0, 234, 255, 0.5); 
+        }
 
         @media (max-width: 600px) {
             .glass-panel { padding: 20px; }
+            nav { padding: 20px; }
         }
     </style>
 </head>
@@ -126,7 +134,7 @@
 
     <nav>
         <a href="index.html" class="logo">SFGC HACKATHON</a>
-        <a href="events.html" style="color: #00eaff; text-decoration: none; font-size: 14px;">← Back</a>
+        <a href="events.html" style="color: #00eaff; text-decoration: none; font-size: 14px;">← Back to Events</a>
     </nav>
 
     <div class="container">
@@ -137,7 +145,7 @@
                 <div class="form-group">
                     <label>1. Which event are you choosing?</label>
                     <select id="eventDropdown" required onchange="handleEventChange()">
-                        <option value="" disabled selected>-- Choose the correct answer --</option>
+                        <option value="" disabled selected>-- Select Event --</option>
                         <option value="24H Hackathon">24H Hackathon (Team Size: 2-4)</option>
                         <option value="Tech Quiz">Tech Quiz (Solo: 1)</option>
                     </select>
@@ -154,22 +162,22 @@
                 <div id="finalSection" style="display:none;">
                     <div class="form-group">
                         <label>College Name (Common for all):</label>
-                        <input type="text" class="form-input" placeholder="Your College / Institution" required>
+                        <input type="text" id="collegeName" class="form-input" placeholder="Your College / Institution" required>
                     </div>
 
                     <div class="payment-section">
                         <label>Registration Payment</label>
                         <div class="qr-placeholder">
-                            <img src="YOUR_QR_IMAGE_PATH.png" alt="Scan to Pay">
+                            <img src="qr_code.png" alt="Scan to Pay">
                         </div>
-                        <p style="font-size: 12px; opacity: 0.7; margin-bottom: 20px;">Scan QR and pay the specific event fee.<br>Submit the Transaction ID below.</p>
+                        <p style="font-size: 12px; opacity: 0.7; margin-bottom: 20px;">Scan QR and pay the registration fee.<br>Submit the Transaction ID below.</p>
                         
                         <div class="form-group" style="text-align: left;">
                             <label>Transaction ID / UTR:</label>
-                            <input type="text" class="form-input" placeholder="Enter 12-digit Transaction ID" required>
+                            <input type="text" id="txnId" class="form-input" placeholder="Enter 12-digit Transaction ID" required>
                         </div>
 
-                        <button type="submit" class="btn-submit">COMPLETE REGISTRATION</button>
+                        <button type="submit" id="submitBtn" class="btn-submit">COMPLETE REGISTRATION</button>
                     </div>
                 </div>
             </form>
@@ -177,11 +185,15 @@
     </div>
 
     <script>
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbx8Li6bHcaBimjhnNoOczlUnqDYl3vJPGSPcYcP6OgB0DkRmYY7pgOX8U1l9fpwHaV5/exec';
+        
         const eventDropdown = document.getElementById('eventDropdown');
         const teamSizeInput = document.getElementById('teamSizeInput');
         const memberContainer = document.getElementById('memberFieldsContainer');
         const finalSection = document.getElementById('finalSection');
         const limitHint = document.getElementById('limitHint');
+        const form = document.getElementById('registrationForm');
+        const btn = document.getElementById('submitBtn');
 
         let minSize = 1;
         let maxSize = 1;
@@ -224,10 +236,10 @@
                     memberContainer.innerHTML += `
                         <div class="member-block">
                             <h4 style="font-size: 12px; color: #00eaff; margin-bottom: 10px;">MEMBER ${i}</h4>
-                            <input type="text" class="form-input" placeholder="Full Name" required style="margin-bottom:10px;">
+                            <input type="text" class="m-name form-input" placeholder="Full Name" required style="margin-bottom:10px;">
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                                <input type="tel" class="form-input" placeholder="Phone Number" required>
-                                <input type="email" class="form-input" placeholder="Gmail ID" required>
+                                <input type="tel" class="m-phone form-input" placeholder="Phone Number" required>
+                                <input type="email" class="m-email form-input" placeholder="Gmail ID" required>
                             </div>
                         </div>
                     `;
@@ -237,7 +249,50 @@
             }
         });
 
-        // 4. MATRIX BACKGROUND
+        // 4. SUBMIT TO GOOGLE SHEETS (EXCEL)
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            btn.disabled = true;
+            btn.innerText = "Processing... Please Wait";
+
+            // Compile member data into a single readable string for Excel
+            let membersList = [];
+            const memberBlocks = document.querySelectorAll('.member-block');
+            memberBlocks.forEach((block, index) => {
+                const name = block.querySelector('.m-name').value;
+                const phone = block.querySelector('.m-phone').value;
+                const email = block.querySelector('.m-email').value;
+                membersList.push(`Member ${index+1}: ${name} (${phone}, ${email})`);
+            });
+
+            const dataToSubmit = {
+                event: eventDropdown.value,
+                teamSize: teamSizeInput.value,
+                college: document.getElementById('collegeName').value,
+                transactionId: document.getElementById('txnId').value,
+                members: membersList.join(" | ")
+            };
+
+            fetch(scriptURL, {
+                method: 'POST',
+                mode: 'no-cors', // Essential for Google Scripts
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dataToSubmit)
+            })
+            .then(response => {
+                alert("Registration Successful! Your details have been recorded in our database.");
+                form.reset();
+                window.location.href = "index.html";
+            })
+            .catch(error => {
+                console.error('Error!', error.message);
+                alert("Network Error. Please try again or check your internet connection.");
+                btn.disabled = false;
+                btn.innerText = "COMPLETE REGISTRATION";
+            });
+        });
+
+        // MATRIX BACKGROUND
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         let width, height, drops;
@@ -263,12 +318,6 @@
         init();
         setInterval(draw, 50);
         window.addEventListener('resize', init);
-
-        // Form Submission logic
-        document.getElementById('registrationForm').onsubmit = (e) => {
-            e.preventDefault();
-            alert("Registration data captured! In a real scenario, this would send to your database.");
-        };
     </script>
 </body>
 </html>
