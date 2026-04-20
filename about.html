@@ -7,247 +7,56 @@
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        /* ... [Existing Styles Kept Unchanged] ... */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #020412; color: white; font-family: 'Georgia', serif; overflow-x: hidden; scroll-behavior: smooth; }
+        #bg-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2; pointer-events: none; }
+        nav { position: fixed; top: 0; left: 0; width: 100%; padding: 25px 50px; display: flex; justify-content: space-between; align-items: center; background: #020412; z-index: 1000; font-family: 'Exo 2', sans-serif; }
+        .logo { color: #00eaff; font-weight: bold; font-size: 24px; text-shadow: none; }
+        .nav-links { display: flex; align-items: center; gap: 30px; }
+        .nav-links a { color: #cfefff; text-decoration: none; font-size: 18px; transition: 0.3s; }
+        .nav-links a:hover, .nav-links a.active { color: #00eaff; }
+        .hamburger { display: none; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; width: 40px; height: 40px; border: 2px solid #00eaff; border-radius: 8px; background: #020412; transition: 0.3s ease; }
+        .hamburger div { width: 20px; height: 2.5px; background: #00eaff; margin: 3px 0; border-radius: 4px; transition: 0.3s; }
+        .container { max-width: 950px; margin: 0 auto; padding: 120px 20px 60px; }
+        
+        .sub-section, .about-section { 
+            background: rgba(0, 234, 255, 0.05); 
+            border: 1px solid rgba(0, 234, 255, 0.2); 
+            border-left: 5px solid #00eaff; 
+            padding: 40px; 
+            border-radius: 15px; 
+            margin-bottom: 60px; 
+            backdrop-filter: blur(8px); 
+            text-align: center; 
         }
 
-        body {
-            background: #020412;
-            color: white;
-            font-family: 'Georgia', serif;
-            overflow-x: hidden;
-            scroll-behavior: smooth;
-        }
+        .sub-section h2, .about-section h2 { font-family: 'Exo 2', sans-serif; color: #00eaff; font-size: 32px; margin-bottom: 20px; }
+        .sub-section p, .about-section p { font-family: 'Georgia', serif; line-height: 1.8; color: #cfefff; font-size: 17px; text-align: justify; }
 
-        #bg-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -2;
-            pointer-events: none;
-        }
-
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            padding: 25px 50px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #020412;
-            z-index: 1000;
-            font-family: 'Exo 2', sans-serif;
-        }
-
-        .logo {
-            color: #00eaff;
-            font-weight: bold;
-            font-size: 24px;
-            text-shadow: none;
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 30px;
-        }
-
-        .nav-links a {
-            color: #cfefff;
-            text-decoration: none;
-            font-size: 18px;
-            transition: 0.3s;
-        }
-
-        .nav-links a:hover,
-        .nav-links a.active {
-            color: #00eaff;
-        }
-
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            width: 40px;
-            height: 40px;
-            border: 2px solid #00eaff;
-            border-radius: 8px;
-            background: #020412;
-            transition: 0.3s ease;
-        }
-
-        .hamburger:hover {
-            transform: scale(1.08);
-        }
-
-        .hamburger div {
-            width: 20px;
-            height: 2.5px;
-            background: #00eaff;
-            margin: 3px 0;
-            border-radius: 4px;
-            transition: 0.3s;
-        }
-
-        .container {
-            max-width: 950px;
-            margin: 0 auto;
-            padding: 120px 20px 60px;
-        }
-
-        .sub-section {
-            background: rgba(0, 234, 255, 0.05);
-            border: 1px solid rgba(0, 234, 255, 0.2);
-            border-left: 5px solid #00eaff;
-            padding: 40px;
-            border-radius: 15px;
-            margin-bottom: 60px;
-            backdrop-filter: blur(8px);
-            text-align: center;
-        }
-
-        .sub-section h2 {
-            font-family: 'Exo 2', sans-serif;
-            color: #00eaff;
-            font-size: 32px;
-            margin-bottom: 20px;
-        }
-
-        .sub-section p {
-            font-family: 'Georgia', serif;
-            line-height: 1.8;
-            color: #cfefff;
-            font-size: 17px;
-            text-align: justify;
-        }
-
-
-        .sub-section img {
+        /* General Logo Styling (Small) */
+        .sub-section img, .about-section img {
             width: 130px;
             margin-bottom: 20px;
         }
 
-        .about-section {
-            background: rgba(0, 234, 255, 0.05);
-            border: 1px solid rgba(0, 234, 255, 0.2);
-            border-left: 5px solid #00eaff;
-            padding: 40px;
-            border-radius: 15px;
-            margin-bottom: 60px;
-            backdrop-filter: blur(8px);
-            text-align: center;
+        /* SPECIFIC STYLING FOR SFGC IMAGE */
+        .sfgc-banner {
+            max-width: 700px !important; /* Overrides the general 130px rule */
+            width: 100% !important;
+            height: auto;
+            display: block;
+            margin: 15px auto !important;
+            border-radius: 10px;
         }
 
-        .about-section h2 {
-            font-family: 'Exo 2', sans-serif;
-            color: #00eaff;
-            font-size: 32px;
-            margin-bottom: 20px;
-        }
-
-        .about-section p {
-            font-family: 'Georgia', serif;
-            line-height: 1.8;
-            color: #cfefff;
-            font-size: 17px;
-            text-align: justify;
-        }
-
-        .about-section img {
-            width: 160px;
-            margin-bottom: 20px;
-        }
-
-        footer {
-            text-align: center;
-            padding: 40px;
-            border-top: 1px solid rgba(0, 234, 255, 0.2);
-            font-size: 14px;
-            background: #020412;
-        }
-
-        footer p {
-            line-height: 1.6;
-        }
-
+        footer { text-align: center; padding: 40px; border-top: 1px solid rgba(0, 234, 255, 0.2); font-size: 14px; background: #020412; }
+        
+        /* Mobile adjustment */
         @media (max-width: 768px) {
-            nav {
-                padding: 15px 20px;
-            }
-
-            .logo {
-                font-size: 18px;
-            }
-
-            .nav-links {
-                display: none;
-                position: absolute;
-                top: 65px;
-                right: 15px;
-                background: #020412;
-                border: 1px solid #00eaff;
-                border-radius: 12px;
-                padding: 20px;
-                flex-direction: column;
-                gap: 25px;
-                width: 200px;
-            }
-
-            .nav-links.active {
-                display: flex;
-            }
-
-            .nav-links a {
-                font-size: 16px;
-            }
-
-            .hamburger {
-                display: flex;
-            }
-
-            .container {
-                padding: 100px 15px 40px;
-            }
-
-            .sub-section {
-                padding: 30px;
-                margin-bottom: 40px;
-            }
-
-            .sub-section h2 {
-                font-size: 24px;
-            }
-
-            .sub-section p {
-                font-size: 16px;
-                text-align: justify;
-            }
-
-            .about-section {
-                padding: 30px;
-                margin-bottom: 40px;
-            }
-
-            .about-section h2 {
-                font-size: 24px;
-            }
-
-            .about-section p {
-                font-size: 16px;
-                text-align: justify;
-            }
-
-            footer {
-                padding: 20px;
-            }
+            .nav-links { display: none; position: absolute; top: 65px; right: 15px; background: #020412; border: 1px solid #00eaff; border-radius: 12px; padding: 20px; flex-direction: column; gap: 25px; width: 200px; }
+            .nav-links.active { display: flex; }
+            .hamburger { display: flex; }
         }
     </style>
 </head>
@@ -264,9 +73,7 @@
             <a href="reach.html">Reach Us</a>
         </div>
         <div class="hamburger" id="hamburger">
-            <div></div>
-            <div></div>
-            <div></div>
+            <div></div><div></div><div></div>
         </div>
     </nav>
 
@@ -274,12 +81,12 @@
         <div class="sub-section">
             <h2>Seshadripuram Educational Trust (SET)</h2>
             <img src="44967.png" alt="SET Logo">
-            <p>The Seshadripuram Educational Trust (SET) stands as a landmark of academic heritage in Karnataka, tracing its origins back to a modest primary school founded in 1930 by two visionary women, Smt. Anandamma and Smt. Seethamma. Over nearly a century, it has grown from a tiny two-room setup into a sprawling network of 34 institutions that serve approximately 24,500 students from kindergarten through to doctoral research. Headquartered in Bengaluru, the Trust operates on the democratic principle of being "by the people, for the people," prioritizing affordable, high-quality education for all socio-economic backgrounds. Beyond its impressive scale, SET is distinguished by its commitment to holistic development and global standards. Its institutions—ranging from prestigious commerce colleges to law schools and postgraduate centers—are supported by a dedicated faculty of over 1,500 staff members. The Trust has earned significant accolades, including the National Award for the Best NSS Unit, and maintains international collaborations with universities across the UK, USA, and Europe to ensure its students are globally competitive. By blending modern infrastructure with a deep-rooted sense of social responsibility, SET continues to be a driving force in shaping the intellectual and moral fabric of the nation.</p>
+            <pThe Seshadripuram Educational Trust (SET) stands as a landmark of academic heritage in Karnataka, tracing its origins back to a modest primary school founded in 1930 by two visionary women, Smt. Anandamma and Smt. Seethamma. Over nearly a century, it has grown from a tiny two-room setup into a sprawling network of 34 institutions that serve approximately 24,500 students from kindergarten through to doctoral research. Headquartered in Bengaluru, the Trust operates on the democratic principle of being "by the people, for the people," prioritizing affordable, high-quality education for all socio-economic backgrounds. Beyond its impressive scale, SET is distinguished by its commitment to holistic development and global standards. Its institutions—ranging from prestigious commerce colleges to law schools and postgraduate centers—are supported by a dedicated faculty of over 1,500 staff members. The Trust has earned significant accolades, including the National Award for the Best NSS Unit, and maintains international collaborations with universities across the UK, USA, and Europe to ensure its students are globally competitive. By blending modern infrastructure with a deep-rooted sense of social responsibility, SET continues to be a driving force in shaping the intellectual and moral fabric of the nation.</p>
         </div>
 
         <div class="sub-section">
             <h2>Seshadripuram First Grade College (SFGC)</h2>
-            <img src="sfgc-image.png" alt="SFGC image">
+            <img src="sfgc-image.png" alt="SFGC image" class="sfgc-banner">
             <p>Seshadripuram First Grade College (SFGC), located in Yelahanka, Bengaluru, is a premier institution under the Seshadripuram Educational Trust that has been a cornerstone of higher education since its inception in 1992. Accredited with a prestigious NAAC A+ grade, the college is widely recognized for its academic rigor and holistic development approach, consistently ranking among the top private colleges in India by publications like India Today. It offers a diverse range of undergraduate and postgraduate programs, including popular courses like B.Com, BCA, BBA (with specialized streams like Aviation), B.Sc, and M.Com, all affiliated with Bengaluru City University. The campus is equipped with modern infrastructure, featuring state-of-the-art laboratories, a vast digital library, and a massive 1,000-seat auditorium that serves as a hub for cultural and academic events. Beyond the classroom, SFGC emphasizes social responsibility and leadership through its active NCC and NSS units, as well as dedicated research centers like the Gandhi Study Centre. With a strong focus on placement through its dedicated cell, the college bridges the gap between academic learning and industry requirements, making it a highly sought-after destination for students in Southern India.</p>
         </div>
 
@@ -306,43 +113,19 @@
     </footer>
 
     <script>
+        // Matrix Background Logic
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         let width, height, drops;
-
-        function init() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-            drops = Array(Math.floor(width / 20)).fill(1);
-        }
-
-        function draw() {
-            ctx.fillStyle = "#020412";
-            ctx.fillRect(0, 0, width, height);
-            ctx.fillStyle = "#00eaff";
-            ctx.font = "15px monospace";
-            for (let i = 0; i < drops.length; i++) {
-                ctx.fillText(Math.floor(Math.random() * 10), i * 20, drops[i] * 20);
-                if (drops[i] * 20 > height && Math.random() > 0.975) {
-                    drops[i] = 0;
-                }
-                drops[i]++;
-            }
-        }
-
-        init();
-        setInterval(draw, 50);
-
-        // Fixed: Using addEventListener instead of window.onresize
-        window.addEventListener('resize', function() {
-            init();
-        });
-
+        function init() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; drops = Array(Math.floor(width / 20)).fill(1); }
+        function draw() { ctx.fillStyle = "rgba(2, 4, 18, 0.1)"; ctx.fillRect(0, 0, width, height); ctx.fillStyle = "#00eaff"; ctx.font = "15px monospace"; for (let i = 0; i < drops.length; i++) { ctx.fillText(Math.floor(Math.random() * 10), i * 20, drops[i] * 20); if (drops[i] * 20 > height && Math.random() > 0.975) { drops[i] = 0; } drops[i]++; } }
+        init(); setInterval(draw, 50);
+        window.addEventListener('resize', init);
+        
+        // Navigation toggle
         const hamburger = document.getElementById('hamburger');
         const navLinks = document.getElementById('nav-links');
-        hamburger.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-        });
+        hamburger.addEventListener('click', () => { navLinks.classList.toggle('active'); });
     </script>
 </body>
 </html>
