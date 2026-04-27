@@ -6,97 +6,51 @@
     <title>Reach Us - SFGC Hackathon 2026</title>
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+   <style>
+        /* --- GLOBAL STYLES --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background: #020412;
             color: white;
-            font-family: 'Georgia', serif;
+            font-family: 'Exo 2', sans-serif;
             overflow-x: hidden;
             scroll-behavior: smooth;
         }
 
+
         #bg-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1;
-            pointer-events: none;
+            position: fixed; top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: -1; pointer-events: none;
         }
 
+      /* --- NAVIGATION --- */
         nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
+            position: fixed; top: 0; width: 100%;
             padding: 25px 50px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            display: flex; justify-content: space-between; align-items: center;
             background: rgba(2, 4, 18, 0.95);
             z-index: 1000;
-            font-family: 'Exo 2', sans-serif;
             border-bottom: 1px solid rgba(0, 234, 255, 0.3);
         }
-
-        .logo {
-            color: #00eaff;
-            font-weight: bold;
-            font-size: 24px;
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 30px;
-        }
-
-        .nav-links a {
-            color: #cfefff;
-            text-decoration: none;
-            font-size: 18px;
-            transition: 0.3s;
-        }
-
-        .nav-links a:hover,
-        .nav-links a.active {
-            color: #00eaff;
-        }
+        .logo { color: #00eaff; font-weight: bold; font-size: 24px; font-family: 'Orbitron', sans-serif; }
+        .nav-links { display: flex; align-items: center; gap: 30px; }
+        .nav-links a { color: #cfefff; text-decoration: none; font-size: 18px; transition: 0.3s; }
+        .nav-links a:hover, .nav-links a.active { color: #00eaff; }
 
         .hamburger {
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            width: 40px;
-            height: 40px;
-            border: 2px solid #00eaff;
-            border-radius: 8px;
-            background: rgba(0, 234, 255, 0.08);
-            backdrop-filter: blur(6px);
-            box-shadow: 0 0 15px rgba(0, 234, 255, 0.5);
-            transition: 0.3s ease;
+            display: none; flex-direction: column; justify-content: center; align-items: center;
+            cursor: pointer; width: 40px; height: 40px; border: 2px solid #00eaff;
+            border-radius: 8px; background: rgba(0, 234, 255, 0.08); backdrop-filter: blur(6px);
+            box-shadow: 0 0 15px rgba(0, 234, 255, 0.5); transition: 0.3s ease;
         }
+        .hamburger div { width: 20px; height: 2.5px; background: #00eaff; margin: 3px 0; border-radius: 4px; }
 
-        .hamburger:hover {
-            transform: scale(1.08);
-            box-shadow: 0 0 25px #00eaff;
-        }
-
-        .hamburger div {
-            width: 20px;
-            height: 2.5px;
-            background: #00eaff;
-            margin: 3px 0;
-            border-radius: 4px;
-            transition: 0.3s;
+        /* --- MAIN CONTENT --- */
+        .container {
+            max-width: 1100px;
+            margin: 120px auto 60px;
+            padding: 0 20px;
         }
 
         .container {
